@@ -1,8 +1,10 @@
-const main = require('../main');
-const gameBoardOne = main.gameBoardOne;
-const gameBoardTwo = main.gameBoardTwo;
-const playerHuman = main.playerHuman;
-const playerAI = main.playerAI;
+const main = require('../src/gameobjects');
+const GameBoard = main.GameBoard;
+const playerHuman = main.Player('human');
+const playerAI = main.Player('ai');
+
+const gameBoardOne = GameBoard(1);
+const gameBoardTwo = GameBoard(2);
 
 it('attacks opposite player', () => {
   playerHuman.attack(gameBoardOne, 18);

@@ -1,5 +1,5 @@
-const main = require('../main');
-const ship = main.shipOne;
+const main = require('../src/gameobjects');
+const ship = main.Ship();
 
 it('sets positions correctly', () => {
   ship.setPositions([1, 2, 3, 4]);

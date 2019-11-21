@@ -1,5 +1,10 @@
-const main = require('../main');
-const gameBoard = main.gameBoardOne;
+const main = require('../src/gameobjects');
+const GameBoard = main.GameBoard;
+
+const gameBoard = GameBoard(1);
+const gameBoardTwo = GameBoard(1);
+const gameBoardThree = GameBoard(1);
+const gameBoardFour = GameBoard(1);
 
 it('test works', () => {
   expect(gameBoard.getPlayerNumber()).toBe(1);
@@ -14,6 +19,39 @@ it('adds ships', () => {
     { position: 2, isHit: false },
     { position: 3, isHit: false },
     { position: 4, isHit: false }
+  ]);
+});
+
+it('refuses to add ship when a position is already occupied', () => {
+  gameBoardTwo.addShip([12, 13, 14, 15]);
+  gameBoardTwo.addShip([15, 25, 35, 45, 55]);
+
+  expect(gameBoardTwo.ships[1]).toBe(undefined);
+});
+
+it('refuses to add ship that wraps (from pos 10 to 11, 30 to 31, etc)', () => {
+  gameBoardThree.addShip([10, 11, 12, 13]);
+  gameBoardThree.addShip([58, 59, 60, 61, 62]);
+  gameBoardThree.addShip([11, 12, 13, 14]);
+
+  expect(gameBoardThree.ships[0].positions).toEqual([
+    { position: 11, isHit: false },
+    { position: 12, isHit: false },
+    { position: 13, isHit: false },
+    { position: 14, isHit: false }
+  ]);
+});
+
+it('refuses to add ship with unadjacent positions', () => {
+  gameBoardFour.addShip([1, 3, 4, 5, 6]);
+  gameBoardFour.addShip([26, 46, 56, 76, 86]);
+  gameBoardFour.addShip([91, 92, 93, 94]);
+
+  expect(gameBoardFour.ships[0].positions).toEqual([
+    { position: 91, isHit: false },
+    { position: 92, isHit: false },
+    { position: 93, isHit: false },
+    { position: 94, isHit: false }
   ]);
 });
 
