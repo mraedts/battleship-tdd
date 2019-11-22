@@ -25,15 +25,26 @@ const Player = playerType => {
   return { attack, previousAttackPositions, aiAttack };
 };
 
-const GameBoard = playerNumber => {
-  this.playerNumber = playerNumber;
+const GameBoard = playerType => {
+  this.playerType = playerType;
   let ships = [];
   let missedAttackPositions = [];
   let allShipsSunk = false;
   let shipLengths = [2, 2, 2, 2, 3, 3, 3, 4, 4, 5];
 
   const placeShipsDefault = () => {
-    const placePlayerShips = () => {};
+    const placePlayerShips = () => {
+      addShip([2, 12]);
+      addShip([90, 100]);
+      addShip([82, 83]);
+      addShip([6, 7]);
+      addShip([85, 86, 87]);
+      addShip([9, 19, 29]);
+      addShip([41, 51, 61]);
+      addShip([33, 34, 35, 36]);
+      addShip([49, 59, 69, 79]);
+      addShip([63, 64, 65, 66, 67]);
+    };
 
     const placeAIShips = () => {
       // create a ship with random positions with given length, runs recursively until legal ship is placed
@@ -64,7 +75,11 @@ const GameBoard = playerNumber => {
       });
     };
 
-    placeAIShips();
+    if (playerType == 'ai') {
+      placeAIShips();
+    } else {
+      placePlayerShips();
+    }
   };
 
   const checkIfAllShipsSunk = () => {
@@ -196,16 +211,27 @@ const GameBoard = playerNumber => {
       missedAttackPositions.push(pos);
     }
   };
-  const getPlayerNumber = () => playerNumber;
+  const getPlayerType = () => playerType;
+
+  const getSunkenShipNumber = () => {
+    let sunkenShipNum = 0;
+    ships.forEach(ship => {
+      if (ship.isSunk()) {
+        sunkenShipNum++;
+      }
+    });
+    return sunkenShipNum;
+  };
 
   return {
-    getPlayerNumber,
+    getPlayerType,
     addShip,
     ships,
     receiveAttack,
     missedAttackPositions,
     checkIfAllShipsSunk,
-    placeShipsDefault
+    placeShipsDefault,
+    getSunkenShipNumber
   };
 };
 

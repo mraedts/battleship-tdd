@@ -6,10 +6,6 @@ const gameBoardTwo = GameBoard(1);
 const gameBoardThree = GameBoard(1);
 const gameBoardFour = GameBoard(1);
 
-it('test works', () => {
-  expect(gameBoard.getPlayerNumber()).toBe(1);
-});
-
 it('adds ships', () => {
   gameBoard.addShip([1, 2, 3, 4]);
   gameBoard.addShip([11, 21, 31, 41]);
