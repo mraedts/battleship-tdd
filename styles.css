@@ -1,11 +1,31 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
 #master-container {
   /* border: solid 1px; */
-  width: 1450px;
+  width: 1800px;
   height: 600px;
   margin: 100px auto 0 auto;
   display: grid;
-  grid-template-columns: 6fr 1fr 6fr;
+  grid-template-columns: 268px 530px 1fr 530px 268px;
   grid-template-rows: 1fr;
+}
+
+#pieces-container {
+  border: solid 1px black;
+  width: 260px;
+  height: 260px;
+  margin-top: 150px;
+  margin-left: -25px;
+
+  position: relative;
+}
+
+#left-wrapper {
+  width: 264px;
+  height: 264px;
 }
 
 #vertline {
@@ -13,9 +33,6 @@
   background-color: grey;
   width: 1px;
   height: 600px;
-}
-
-.gameboard-container {
 }
 
 .gameboard-grid {
@@ -40,5 +57,41 @@
 }
 
 .grid-div:hover {
+  cursor: pointer;
+}
+
+#friendly-ships-sunk {
+  display: none;
+  margin-top: 257px;
+}
+
+#enemy-ships-sunk {
+  width: 170px;
+  display: inline-block;
+  margin-top: 257px;
+  margin-left: 50px;
+  visibility: hidden;
+}
+
+#piece-grid {
+  margin: 105px 83px;
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  transition: ease-in-out 0.4s;
+
+  border: solid 1px black;
+  height: 45px;
+  width: 90px;
+}
+
+.vertical {
+  transform: rotate(90deg);
+  opacity: 100;
+}
+
+.block {
+  border: solid 1px black;
   cursor: pointer;
 }

@@ -1,4 +1,4 @@
-const renderGridDivs = (boards, clickPosHandler) => {
+const renderGridDivs = (boards, clickPosHandler, players, gameState) => {
   const gameBoardGrids = document.querySelectorAll('.gameboard-grid'),
     colors = [
       '#badaf7',
@@ -45,6 +45,8 @@ const renderGridDivs = (boards, clickPosHandler) => {
   const renderPlayerBoard = () => {
     const playerBoardGrid = gameBoardGrids[0],
       playerBoard = boards[0];
+
+    playerBoardGrid.innerHTML = '';
 
     const getHitArray = () => {
       let hitPositions = [];
@@ -100,6 +102,69 @@ const renderGridDivs = (boards, clickPosHandler) => {
         div.appendChild(img);
       }
 
+      const addDropHandler = () => {
+        div.addEventListener('dragover', event => {
+          event.preventDefault();
+        });
+
+        const createShipArray = (isVertical, pos) => {
+          //create ship based on orientation, dropped position and drag starting point
+          const shipLength = boards[0].shipLengths[boards[0].shipNumToPlace];
+          const lastPieceIndex = players[0].lastPieceIndex;
+          let difference = lastPieceIndex - 1;
+          let shipArray = [];
+          let multiplier = 1;
+          if (isVertical) {
+            multiplier = 10;
+          }
+
+          for (let i = 1; i <= shipLength; i++) {
+            if (i < lastPieceIndex) {
+              shipArray.push(pos - difference * multiplier);
+              difference--;
+            } else if (i == lastPieceIndex) {
+              shipArray.push(pos);
+              difference = 1;
+            } else {
+              shipArray.push(pos + difference * multiplier);
+              difference++;
+            }
+          }
+
+          console.log(shipArray);
+          return shipArray;
+        };
+
+        div.addEventListener('drop', event => {
+          event.preventDefault();
+          const pos = Number(event.target.dataset.pos);
+          const isVertical = JSON.parse(event.dataTransfer.getData('text'));
+          const friendlyShipsSunk = document.querySelector(
+            '#friendly-ships-sunk'
+          );
+          const enemyShipsSunk = document.querySelector('#enemy-ships-sunk');
+          const ship = createShipArray(isVertical, pos);
+          if (boards[0].addShip(ship) != false) {
+            if (boards[0].shipNumToPlace == 9) {
+              const piecesContainer = document.querySelector(
+                '#pieces-container'
+              );
+              gameHasStarted = 9;
+              piecesContainer.style.display = 'none';
+              friendlyShipsSunk.style.display = 'block';
+              enemyShipsSunk.style.visibility = 'visible';
+            }
+
+            boards[0].shipNumToPlace++;
+            renderPiecesToPlace(players, boards);
+          }
+
+          renderPlayerBoard();
+        });
+        playerBoardGrid.appendChild(div);
+      };
+
+      addDropHandler();
       playerBoardGrid.appendChild(div);
     }
   };
@@ -108,6 +173,7 @@ const renderGridDivs = (boards, clickPosHandler) => {
     const playerBoardGrid = gameBoardGrids[1],
       playerBoard = boards[1];
 
+    playerBoardGrid.innerHTML = '';
     const getHitArray = () => {
       let hitPositions = [];
       playerBoard.ships.forEach(ship => {
@@ -172,13 +238,114 @@ const renderGridDivs = (boards, clickPosHandler) => {
     );
     const enemySunkenShipsDisplay = document.querySelector('#enemy-ships-sunk');
 
-    friendlySunkenShipsDisplay.textContent = `friendly ships sunk: ${boards[0].getSunkenShipNumber()}`;
-    enemySunkenShipsDisplay.textContent = `enemy ships sunk: ${boards[1].getSunkenShipNumber()}`;
+    friendlySunkenShipsDisplay.textContent = `Friendly ships sunk: ${boards[0].getSunkenShipNumber()}`;
+    enemySunkenShipsDisplay.textContent = `Enemy ships sunk: ${boards[1].getSunkenShipNumber()}`;
   };
 
   setSunkenShipCounts();
   renderPlayerBoard();
   renderAIBoard();
+  renderPiecesToPlace(players, boards);
+};
+
+const Piece = (shipLength, players) => {
+  const piece = document.createElement('div');
+  piece.id = 'piece-grid';
+  piece.style.position = 'absolute';
+  piece.setAttribute('draggable', true);
+  piece.style.width = `${45 * shipLength}px`;
+  piece.style.gridTemplateColumns = `repeat(${shipLength}, 1fr)`;
+
+  for (let i = 0; i < shipLength; i++) {
+    const block = document.createElement('div');
+    block.dataset.index = i + 1;
+    block.id = 'regular-block';
+    block.classList.add('block');
+    block.addEventListener('mouseover', event => {
+      console.log(event.target.dataset.index);
+      players[0].lastPieceIndex = event.target.dataset.index;
+      console.log(`index: ${players[0].lastPieceIndex}`);
+    });
+    piece.appendChild(block);
+  }
+
+  return piece;
+};
+
+const renderPiecesToPlace = (players, boards) => {
+  const shipLength = boards[0].shipLengths[boards[0].shipNumToPlace];
+
+  const piecesContainer = document.querySelector('#pieces-container');
+  piecesContainer.innerHTML = '';
+
+  const Piece = (shipLength, players, numToPlace) => {
+    const colors = [
+      '#badaf7',
+      '#091476',
+      '#5ea9ed',
+      '#3090e8',
+      '#1776cf',
+      '#125ca1',
+      '#0d4273',
+      '#082745',
+      '#1f6b93',
+      '#1025d5'
+    ];
+
+    const piece = document.createElement('div');
+    piece.id = 'piece-grid';
+    piece.style.position = 'absolute';
+    piece.setAttribute('draggable', true);
+    piece.style.width = `${45 * shipLength}px`;
+    piece.style.gridTemplateColumns = `repeat(${shipLength}, 1fr)`;
+
+    for (let i = 0; i < shipLength; i++) {
+      const block = document.createElement('div');
+      block.dataset.index = i + 1;
+      block.id = 'regular-block';
+      block.classList.add('block');
+      block.style.backgroundColor = colors[numToPlace];
+      block.addEventListener('mouseover', event => {
+        console.log(event.target.dataset.index);
+        players[0].lastPieceIndex = event.target.dataset.index;
+        console.log(`index: ${players[0].lastPieceIndex}`);
+      });
+      piece.appendChild(block);
+    }
+
+    return piece;
+  };
+
+  const twoLengthPiece = Piece(shipLength, players, boards[0].shipNumToPlace);
+
+  const margins = ['83px', '60px', '38px', '16px'];
+
+  switch (shipLength) {
+    case 2:
+      twoLengthPiece.style.marginLeft = margins[0];
+      break;
+    case 3:
+      twoLengthPiece.style.marginLeft = margins[1];
+      break;
+    case 4:
+      twoLengthPiece.style.marginLeft = margins[2];
+      break;
+    case 5:
+      twoLengthPiece.style.marginLeft = margins[3];
+      break;
+  }
+
+  twoLengthPiece.addEventListener('click', ev => {
+    ev.target.parentNode.classList.toggle('vertical');
+  });
+  twoLengthPiece.addEventListener('dragstart', ev => {
+    ev.dataTransfer.setData(
+      'text',
+      `${ev.target.classList.contains('vertical')}`
+    );
+  });
+
+  piecesContainer.appendChild(twoLengthPiece);
 };
 
 module.exports = { renderGridDivs };

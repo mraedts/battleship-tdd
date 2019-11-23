@@ -1,5 +1,6 @@
 const Player = playerType => {
   let previousAttackPositions = [];
+  let lastPieceHoverIndex;
 
   const attack = (board, pos) => {
     if (previousAttackPositions.includes(pos)) {
@@ -22,7 +23,7 @@ const Player = playerType => {
     }
   };
 
-  return { attack, previousAttackPositions, aiAttack };
+  return { attack, previousAttackPositions, aiAttack, lastPieceHoverIndex };
 };
 
 const GameBoard = playerType => {
@@ -31,6 +32,7 @@ const GameBoard = playerType => {
   let missedAttackPositions = [];
   let allShipsSunk = false;
   let shipLengths = [2, 2, 2, 2, 3, 3, 3, 4, 4, 5];
+  let shipNumToPlace = 0;
 
   const placeShipsDefault = () => {
     const placePlayerShips = () => {
@@ -162,21 +164,8 @@ const GameBoard = playerType => {
     };
 
     const shipIsOutOfBounds = () => {
-      const invalidPositions = [
-        0,
-        101,
-        102,
-        103,
-        104,
-        105,
-        106,
-        107,
-        108,
-        109,
-        110
-      ];
       for (let i = 0; i < posArray.length; i++) {
-        if (invalidPositions.includes(posArray[i])) {
+        if (posArray[i] < 1 || posArray[i] > 100) {
           return true;
         }
       }
@@ -231,7 +220,9 @@ const GameBoard = playerType => {
     missedAttackPositions,
     checkIfAllShipsSunk,
     placeShipsDefault,
-    getSunkenShipNumber
+    getSunkenShipNumber,
+    shipNumToPlace,
+    shipLengths
   };
 };
 

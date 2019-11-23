@@ -3,10 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <link href="./styles.css" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/muuri@0.8.0/dist/muuri.min.js"></script>
+    <!-- <script>
+      function drag(ev) {
+        ev.dataTransfer.setData('text', ev.target.id);
+      }
+      function toggleRotateClass(ev) {
+        event.target.parentNode.classList.toggle('vertical');
+      }
+    </script> -->
   </head>
   <body>
     <div id="master-container">
+      <div id="left-wrapper">
+        <div id="friendly-ships-sunk">Friendly ships sunk: 0</div>
+        <div id="pieces-container"></div>
+      </div>
+
       <div class="gameboard-container">
         <div id="gameboard-one-grid" class="gameboard-grid"></div>
       </div>
@@ -16,8 +28,7 @@
       <div class="gameboard-container">
         <div id="gameboard-two-grid" class="gameboard-grid"></div>
       </div>
-      <div id="friendly-ships-sunk">friendly ships sunk: 0</div>
-      <div id="enemy-ships-sunk">enemy ships sunk: 0</div>
+      <div id="enemy-ships-sunk">Enemy ships sunk: 0</div>
     </div>
 
     <script src="./dist/main.js"></script>
