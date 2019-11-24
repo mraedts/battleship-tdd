@@ -4,7 +4,7 @@ const Player = playerType => {
 
   const attack = (board, pos) => {
     if (previousAttackPositions.includes(pos)) {
-      return;
+      return false;
     }
     board.receiveAttack(pos);
     previousAttackPositions.push(pos);

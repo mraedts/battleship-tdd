@@ -3,20 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <link href="./styles.css" rel="stylesheet" type="text/css" />
-    <!-- <script>
-      function drag(ev) {
-        ev.dataTransfer.setData('text', ev.target.id);
-      }
-      function toggleRotateClass(ev) {
-        event.target.parentNode.classList.toggle('vertical');
-      }
-    </script> -->
   </head>
   <body>
     <div id="master-container">
       <div id="left-wrapper">
-        <div id="friendly-ships-sunk">Friendly ships sunk: 0</div>
+        <div id="friendly-ships-sunk">
+          <h2 id="friendly-ships-sunk-text">Friendly ships sunk</h2>
+          <div id="friendly-ships-sunk-num">0</div>
+        </div>
         <div id="pieces-container"></div>
+        <button id="clear-board-button">Clear board</button>
       </div>
 
       <div class="gameboard-container">
@@ -28,7 +24,10 @@
       <div class="gameboard-container">
         <div id="gameboard-two-grid" class="gameboard-grid"></div>
       </div>
-      <div id="enemy-ships-sunk">Enemy ships sunk: 0</div>
+      <div id="enemy-ships-sunk">
+        <h2 id="enemy-ships-sunk-text">Enemy ships sunk</h2>
+        <div id="enemy-ships-sunk-num">0</div>
+      </div>
     </div>
 
     <script src="./dist/main.js"></script>
