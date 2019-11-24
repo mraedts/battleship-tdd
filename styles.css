@@ -1,0 +1,144 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  height: 89.5vh;
+  margin: 0;
+  overflow: hidden;
+
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    45deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 2%,
+    rgba(9, 16, 126, 1) 3%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+#master-container {
+  /* border: solid 1px; */
+  width: 1800px;
+  height: 600px;
+  margin: 100px auto 0 auto;
+  display: grid;
+  grid-template-columns: 268px 530px 1fr 530px 268px;
+  grid-template-rows: 1fr;
+}
+
+#enemy-ships-sunk {
+  width: 260px;
+}
+
+#pieces-container {
+  border: solid 1px black;
+  width: 260px;
+  height: 260px;
+  margin-top: 150px;
+  margin-left: -25px;
+  background-color: white;
+  border-radius: 150px;
+
+  position: relative;
+}
+
+#left-wrapper {
+  width: 264px;
+  height: 500px;
+}
+
+#clear-board-button {
+  margin: 50px 0 0 55px;
+}
+
+#friendly-ships-sunk-text,
+#enemy-ships-sunk-text {
+  text-align: center;
+  margin-top: -50px;
+}
+
+#friendly-ships-sunk-num,
+#enemy-ships-sunk-num {
+  font-size: 40px;
+  text-align: center;
+}
+
+#enemy-ships-sunk-text {
+  margin-top: -75px;
+}
+
+#vertline {
+  margin: 0 auto 0 auto;
+  background-color: grey;
+  width: 1px;
+  height: 600px;
+}
+
+.gameboard-grid {
+  border-top: solid grey 3px;
+  border-bottom: solid grey 4px;
+  border-right: solid grey 4px;
+  border-left: solid grey 3px;
+  width: 510px;
+  height: 510px;
+  margin: 40px auto 0 auto;
+  display: grid;
+  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: repeat(10, 1fr);
+  background-color: white;
+}
+
+.grid-div-friendly,
+.grid-div-enemy {
+  width: 50px;
+  height: 50px;
+  border: solid black 1px;
+  border-right: 0;
+  border-bottom: 0;
+  text-align: center;
+}
+
+.grid-div-enemy:hover {
+  cursor: pointer;
+}
+
+.grid-div-enemy {
+  background-color: white;
+}
+
+#friendly-ships-sunk {
+  display: none;
+  margin-top: 230px;
+  color: white;
+}
+
+#enemy-ships-sunk {
+  color: white;
+  width: 260px;
+  display: inline-block;
+  margin-top: 257px;
+  margin-left: 50px;
+  visibility: hidden;
+}
+
+#piece-grid {
+  margin: 105px 83px;
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  transition: ease-in-out 0.4s;
+
+  border: solid 1px black;
+  height: 45px;
+  width: 90px;
+}
+
+.vertical {
+  transform: rotate(90deg);
+  opacity: 100;
+}
+
+.block {
+  border: solid 1px black;
+  cursor: pointer;
+}
