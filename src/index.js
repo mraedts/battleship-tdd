@@ -8,6 +8,13 @@ const gameFlow = (() => {
   let playerTurn = 1;
   let boards = [GameBoard('human'), GameBoard('ai')];
   let players = [Player('human'), Player('ai')];
+  const winnerText = document.querySelector('#winner-text');
+  const clearBoardButton = document.querySelector('#clear-board-button');
+  const restartButton = document.querySelector('#button-wrapper');
+  const friendlyShipsSunk = document.querySelector('#friendly-ships-sunk');
+  const enemyShipsSunk = document.querySelector('#enemy-ships-sunk');
+  const piecesContainer = document.querySelector('#pieces-container');
+  const rotateText = document.querySelector('#rotate-text');
   const gameState = {
     numPlacedShips: 0,
     aiFinishedTurn: true,
@@ -16,12 +23,35 @@ const gameFlow = (() => {
   };
   boards[1].placeShipsDefault();
 
-  const clearBoardButton = document.querySelector('#clear-board-button');
-
   clearBoardButton.addEventListener('click', event => {
     boards[0] = GameBoard('human');
     renderPlayerBoard();
   });
+
+  restartButton.addEventListener('click', () => reset());
+
+  const reset = () => {
+    friendlyShipsSunk.style.display = 'none';
+    enemyShipsSunk.style.visibility = 'hidden';
+    winnerText.style.visibility = 'hidden';
+    restartButton.style.visibility = 'hidden';
+    piecesContainer.style.display = 'block';
+    clearBoardButton.style.display = 'block';
+    gameState.numPlacedShips = 0;
+    gameState.aiFinishedTurn = true;
+    gameState.hasStarted = false;
+    gameState.hasFinished = false;
+    document.querySelector('#friendly-ships-sunk-num').textContent = 0;
+    document.querySelector('#enemy-ships-sunk-num').textContent = 0;
+
+    boards[0] = GameBoard('human');
+    boards[1] = GameBoard('ai');
+    players[0] = Player('human');
+    players[1] = Player('ai');
+    boards[1].placeShipsDefault();
+    renderPlayerBoard();
+    renderAIBoard(boards);
+  };
 
   const addDropHandler = div => {
     div.addEventListener('dragover', event => {
@@ -62,13 +92,10 @@ const gameFlow = (() => {
 
       const pos = Number(event.target.dataset.pos);
       const isVertical = JSON.parse(event.dataTransfer.getData('text'));
-      const friendlyShipsSunk = document.querySelector('#friendly-ships-sunk');
-      const enemyShipsSunk = document.querySelector('#enemy-ships-sunk');
       const ship = createShipArray(isVertical, pos, boards);
 
       if (boards[0].addShip(ship) != false) {
         if (boards[0].shipNumToPlace == 9) {
-          const piecesContainer = document.querySelector('#pieces-container');
           const enemyGridDivs = document.querySelectorAll('.grid-div-enemy');
           enemyGridDivs.forEach(div => {
             div.style.backgroundColor = 'white';
@@ -77,7 +104,8 @@ const gameFlow = (() => {
           piecesContainer.style.display = 'none';
           friendlyShipsSunk.style.display = 'block';
           enemyShipsSunk.style.visibility = 'visible';
-          console.log(gameState.hasStarted);
+          rotateText.style.visibility = 'hidden';
+
           clearBoardButton.style.display = 'none';
         }
 
@@ -107,10 +135,15 @@ const gameFlow = (() => {
       '#friendly-ships-sunk-num'
     );
     const enemySunkenShips = document.querySelector('#enemy-ships-sunk-num');
+
     enemyGridDivs.forEach(div => {
       const pos = div.dataset.pos;
       div.addEventListener('click', () => {
-        if (gameState.hasStarted && gameState.aiFinishedTurn) {
+        if (
+          gameState.hasStarted &&
+          gameState.aiFinishedTurn &&
+          gameState.hasFinished == false
+        ) {
           gameState.aiFinishedTurn = false;
           if (players[0].attack(boards[1], pos) == false) {
             gameState.aiFinishedTurn = true;
@@ -119,15 +152,28 @@ const gameFlow = (() => {
           }
 
           renderAIBoard();
+          if (boards[1].getSunkenShipNumber() == 10) {
+            winnerText.textContent = 'You won!';
+            winnerText.style.visibility = 'visible';
+            gameState.hasFinished = true;
+            restartButton.style.visibility = 'visible';
+          }
+
           enemySunkenShips.textContent = boards[1].getSunkenShipNumber();
 
           setTimeout(() => {
             players[1].aiAttack(boards[0]);
 
             renderPlayerBoard();
+            if (boards[0].getSunkenShipNumber() == 10) {
+              winnerText.textContent = 'Computer won!';
+              winnerText.style.visibility = 'visible';
+              gameState.hasFinished = true;
+              restartButton.style.visibility = 'visible';
+            }
             friendlySunkenShips.textContent = boards[0].getSunkenShipNumber();
             gameState.aiFinishedTurn = true;
-          }, 600);
+          }, 300);
         }
       });
     });
