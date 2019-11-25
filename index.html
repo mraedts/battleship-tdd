@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Battleships</title>
     <meta charset="UTF-8" />
     <link href="./styles.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
+    <h1 id="winner-text">BOTTOM TEXT</h1>
+    <div id="button-wrapper">
+      <button id="restart-button">Restart</button>
+    </div>
     <div id="master-container">
       <div id="left-wrapper">
         <div id="friendly-ships-sunk">
           <h2 id="friendly-ships-sunk-text">Friendly ships sunk</h2>
           <div id="friendly-ships-sunk-num">0</div>
         </div>
+        <div id="rotate-text">Click ship to rotate</div>
         <div id="pieces-container"></div>
         <button id="clear-board-button">Clear board</button>
       </div>
